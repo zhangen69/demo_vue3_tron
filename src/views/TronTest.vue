@@ -29,7 +29,7 @@ const getContractMethod = async (method: any) => {
   const func = contract.value[method];
   if (func) {
     if (method == "balanceOf") {
-      const result = await func(address).call();
+      const result = await func(defaultAddress).call();
       info.value[method] = result.toString() / 100;
     } else if (method == "transfer") {
       try {
