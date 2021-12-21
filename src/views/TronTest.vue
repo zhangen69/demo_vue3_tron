@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { Ref, ref } from "vue-demi";
+import axios from 'axios';
+
+// setup axios configs
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 const tronWeb = (window as any).tronWeb;
 const defaultAddress = tronWeb.defaultAddress.base58;
@@ -10,12 +14,13 @@ const info: Ref<any> = ref({});
 
 // set header
 tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey });
+tronWeb.setHeader({ "Content-Type": 'application/x-www-form-urlencoded' });
 
 // get contract
 let contract = ref();
 const getContract = async () => {
   contract.value = await tronWeb.contract().at(sc);
-  contract.value.tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey });
+  contract.value.tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey, "Content-Type": 'application/x-www-form-urlencoded' });
   console.log("contract", contract.value);
 };
 
@@ -55,6 +60,7 @@ async function testName() {
 
   // call contract method
   try {
+    contract.value.tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey, "Content-Type": 'application/x-www-form-urlencoded' });
     const result = await contract.value.name().call();
     info.value.name = result;
   } catch (error) {
@@ -70,6 +76,7 @@ async function testSymbol() {
 
   // call contract method
   try {
+    contract.value.tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey, "Content-Type": 'application/x-www-form-urlencoded' });
     const result = await contract.value.symbol().call();
     info.value.symbol = result;
   } catch (error) {
@@ -85,6 +92,7 @@ async function testDecimals() {
 
   // call contract method
   try {
+    contract.value.tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey, "Content-Type": 'application/x-www-form-urlencoded' });
     const result = await contract.value.decimals().call();
     info.value.decimals = result;
   } catch (error) {
@@ -100,6 +108,7 @@ async function testBalanceOf() {
 
   // call contract method
   try {
+    contract.value.tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey, "Content-Type": 'application/x-www-form-urlencoded' });
     const result = await contract.value.balanceOf(defaultAddress).call();
     info.value.balance = result;
   } catch (error) {
@@ -115,6 +124,7 @@ async function testTransfer() {
 
   // call contract method
   try {
+    contract.value.tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey, "Content-Type": 'application/x-www-form-urlencoded' });
     const result = await contract.value
       .transfer(transferAddress, 1000)
       .send({ feeLimit: 5e9 });
