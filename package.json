@@ -12,12 +12,14 @@
     "eruda": "^2.4.1",
     "ethers": "^5.5.2",
     "pinia": "^2.0.6",
+    "qs": "^6.9.7",
     "vue": "^3.2.26",
     "vue-demi": "^0.12.1",
     "vue-router": "^4.0.12"
   },
   "devDependencies": {
     "@types/node": "^16.11.12",
+    "@types/qs": "^6.9.7",
     "@vitejs/plugin-vue": "^2.0.0",
     "typescript": "~4.5.3",
     "vite": "^2.7.1",

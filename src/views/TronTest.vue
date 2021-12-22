@@ -1,9 +1,21 @@
 <script setup lang="ts">
 import { Ref, ref } from "vue-demi";
 import axios from 'axios';
+import qs from 'qs';
 
 // setup axios configs
+axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.get['Content-Type'] = 'application/x-www-form-urlencoded';
+// write some useless sample header
+axios.defaults.headers.common['Sample-Config'] = 'this is a sample config';
+
+const sampleData = {
+    "name": "morpheus",
+    "job": "leader"
+}
+
+const sampleApiURL = 'https://reqres.in/api/users'
 
 const tronWeb = (window as any).tronWeb;
 const defaultAddress = tronWeb.defaultAddress.base58;
@@ -13,8 +25,7 @@ const sc = "TKWsxjh97sCPipTAfghW7vDFdx2HhjecCe";
 const info: Ref<any> = ref({});
 
 // set header
-tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey });
-tronWeb.setHeader({ "Content-Type": 'application/x-www-form-urlencoded' });
+tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey, "Content-Type": 'application/x-www-form-urlencoded' });
 
 // get contract
 let contract = ref();
@@ -24,33 +35,15 @@ const getContract = async () => {
   console.log("contract", contract.value);
 };
 
-const getContractMethod = async (method: any) => {
-  if (!contract.value) {
-    await getContract();
+async function testSampleAPI(type: string) {
+  if (type == 'post') {
+    const res = await axios.post(sampleApiURL, qs.stringify(sampleData))
+    console.log('sample post api', res)
+  } else {
+    const res = await axios.get(sampleApiURL)
+    console.log('sample get api', res)
   }
-  if (!method) {
-    alert("method cannot be empty");
-  }
-  const func = contract.value[method];
-  if (func) {
-    if (method == "balanceOf") {
-      const result = await func(defaultAddress).call();
-      info.value[method] = result.toString() / 100;
-    } else if (method == "transfer") {
-      try {
-        const result = await func(transferAddress, 10000).send({
-          feeLimit: 5e9,
-        });
-        info.value[method] = result;
-      } catch (error) {
-        info.value[method] = error;
-      }
-    } else {
-      const result = await func().call();
-      info.value[method] = result;
-    }
-  }
-};
+}
 
 async function testName() {
   // check contract
@@ -144,6 +137,8 @@ async function testTransfer() {
     <button @click="testDecimals">Get Decimals</button>
     <button @click="testBalanceOf">Get Balance</button>
     <button @click="testTransfer">Transfer</button>
+    <button @click="testSampleAPI('post')">Test POST API</button>
+    <button @click="testSampleAPI('get')">Test GET API</button>
     <pre>info: {{ info }}</pre>
   </main>
 </template>
