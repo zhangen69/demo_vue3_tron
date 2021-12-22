@@ -55,9 +55,11 @@ async function testName() {
   try {
     contract.value.tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey, "Content-Type": 'application/x-www-form-urlencoded' });
     const result = await contract.value.name().call();
+    console.log('testName', result)
     info.value.name = result;
   } catch (error) {
     info.value.name = error;
+    console.log('testName err', error)
   }
 }
 
@@ -71,9 +73,11 @@ async function testSymbol() {
   try {
     contract.value.tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey, "Content-Type": 'application/x-www-form-urlencoded' });
     const result = await contract.value.symbol().call();
+    console.log('testSymbol', result)
     info.value.symbol = result;
   } catch (error) {
     info.value.symbol = error;
+    console.log('testSymbol err', error)
   }
 }
 
@@ -87,9 +91,11 @@ async function testDecimals() {
   try {
     contract.value.tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey, "Content-Type": 'application/x-www-form-urlencoded' });
     const result = await contract.value.decimals().call();
+    console.log('testDecimals', result)
     info.value.decimals = result;
   } catch (error) {
     info.value.decimals = error;
+    console.log('testDecimals err', error)
   }
 }
 
@@ -103,9 +109,11 @@ async function testBalanceOf() {
   try {
     contract.value.tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey, "Content-Type": 'application/x-www-form-urlencoded' });
     const result = await contract.value.balanceOf(defaultAddress).call();
+    console.log('testBalanceOf', result)
     info.value.balance = result;
   } catch (error) {
     info.value.balance = error;
+    console.log('testBalanceOf err', error)
   }
 }
 
@@ -121,9 +129,24 @@ async function testTransfer() {
     const result = await contract.value
       .transfer(transferAddress, 1000)
       .send({ feeLimit: 5e9 });
+    console.log('testTransfer', result)
     info.value.transfer = result;
   } catch (error) {
     info.value.transfer = error;
+    console.log('testTransfer err', error)
+  }
+}
+
+async function getNodeInfo() {
+  // call get node info
+  try {
+    tronWeb.setHeader({ "TRON-PRO-API-KEY": apiKey, "Content-Type": 'application/x-www-form-urlencoded' });
+    const result = await tronWeb.trx.getNodeInfo();
+    console.log('getNodeInfo', result)
+    info.value.nodeInfo = result;
+  } catch (error) {
+    info.value.nodeInfo = error;
+    console.log('getNodeInfo err', error)
   }
 }
 </script>
@@ -132,6 +155,7 @@ async function testTransfer() {
   <main>
     <h1>Tron Test</h1>
     <pre>tronWeb.ready: {{ tronWeb.ready }}</pre>
+    <button @click="getNodeInfo">Get NodeInfo</button>
     <button @click="testName">Get Name</button>
     <button @click="testSymbol">Get Symbol</button>
     <button @click="testDecimals">Get Decimals</button>
